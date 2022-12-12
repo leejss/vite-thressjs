@@ -1,6 +1,10 @@
 import * as THREE from "three";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
+import GUI from "lil-gui";
+import gsap from "gsap";
 import "./style.css";
+
+const canvas = document.querySelector(".webgl");
 
 const sizes = {
   width: innerWidth,
@@ -12,7 +16,6 @@ const cursor = {
   x: 0,
   y: 0,
 };
-const canvas = document.querySelector(".webgl");
 
 addEventListener("mousemove", (e) => {
   cursor.x = e.clientX / sizes.width - 0.5;
@@ -62,6 +65,31 @@ const mat = new THREE.MeshBasicMaterial({
 const mesh = new THREE.Mesh(geo, mat);
 scene.add(mesh);
 
+// Debug
+const gui = new GUI();
+
+const debugObj = {
+  color: 0xff0000,
+  spin: () => {
+    gsap.to(mesh.rotation, {
+      duration: 1,
+      y: mesh.rotation.y + 10,
+    });
+  },
+};
+
+gui.add(debugObj, "spin");
+
+gui.addColor(debugObj, "color").onChange((val) => {
+  mat.color.set(val);
+});
+
+gui.add(mesh.position, "y", -3, 3, 0.01);
+gui.add(mesh.position, "x", -3, 3, 0.01);
+gui.add(mesh.position, "z", -3, 3, 0.01);
+gui.add(mesh, "visible");
+gui.add(mat, "wireframe");
+
 // Camera
 const camera = new THREE.PerspectiveCamera(75, sizes.width / sizes.height);
 camera.position.z = 3;
@@ -76,14 +104,14 @@ controls.enableDamping = true;
 const renderer = new THREE.WebGLRenderer({
   canvas,
 });
-renderer.setSize(sizes.width, sizes.height);
 
+renderer.setSize(sizes.width, sizes.height);
 renderer.render(scene, camera);
 
 const clock = new THREE.Clock();
 
 const tick = () => {
-  const elapsedTime = clock.getElapsedTime();
+  // const elapsedTime = clock.getElapsedTime();
   // Update cameara
 
   // Update controls
