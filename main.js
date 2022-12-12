@@ -4,25 +4,24 @@ import GUI from "lil-gui";
 import gsap from "gsap";
 import "./style.css";
 
+// Constants
 const canvas = document.querySelector(".webgl");
-
 const sizes = {
   width: innerWidth,
   height: innerHeight,
 };
 
-// Cursor
-const cursor = {
-  x: 0,
-  y: 0,
-};
+// const cursor = {
+//   x: 0,
+//   y: 0,
+// };
 
-addEventListener("mousemove", (e) => {
-  cursor.x = e.clientX / sizes.width - 0.5;
-  cursor.y = -(e.clientY / sizes.height - 0.5);
-});
+// addEventListener("mousemove", (e) => {
+//   cursor.x = e.clientX / sizes.width - 0.5;
+//   cursor.y = -(e.clientY / sizes.height - 0.5);
+// });
 
-// Handle resize
+// Event Handlers
 addEventListener("resize", (e) => {
   sizes.width = innerWidth;
   sizes.height = innerHeight;
@@ -52,12 +51,14 @@ addEventListener("dblclick", () => {
     }
   }
 });
+/* -------------------------------------------------------------------------- */
+/*                                   THREE;                                   */
+/* -------------------------------------------------------------------------- */
 
-// Scene
+/* --------------------------------- Scene; --------------------------------- */
 const scene = new THREE.Scene();
 
-// Objects
-// Mesh = geometry + material
+/* ---------------------------------- Mesh; --------------------------------- */
 const geo = new THREE.BoxGeometry(1, 1, 1);
 const mat = new THREE.MeshBasicMaterial({
   color: 0xff0000,
@@ -65,7 +66,7 @@ const mat = new THREE.MeshBasicMaterial({
 const mesh = new THREE.Mesh(geo, mat);
 scene.add(mesh);
 
-// Debug
+/* --------------------------------- Debug; --------------------------------- */
 const gui = new GUI();
 
 const debugObj = {
@@ -90,25 +91,21 @@ gui.add(mesh.position, "z", -3, 3, 0.01);
 gui.add(mesh, "visible");
 gui.add(mat, "wireframe");
 
-// Camera
+/* --------------------------------- Camera; -------------------------------- */
 const camera = new THREE.PerspectiveCamera(75, sizes.width / sizes.height);
 camera.position.z = 3;
 scene.add(camera);
 
-// Conrols
+/* -------------------------------- Controls; ------------------------------- */
 const controls = new OrbitControls(camera, canvas);
 controls.enableDamping = true;
 
-// Renderer
-
+/* -------------------------------- Renderer; ------------------------------- */
 const renderer = new THREE.WebGLRenderer({
   canvas,
 });
-
 renderer.setSize(sizes.width, sizes.height);
 renderer.render(scene, camera);
-
-const clock = new THREE.Clock();
 
 const tick = () => {
   // const elapsedTime = clock.getElapsedTime();
